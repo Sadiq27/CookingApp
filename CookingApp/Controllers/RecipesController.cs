@@ -1,3 +1,4 @@
+namespace CookingApp.Controllers;
 using CookingApp.Attributes.Http;
 using CookingApp.Controllers.Base;
 using CookingApp.Models;
@@ -48,7 +49,6 @@ public class RecipesController : ControllerBase
             postData = await reader.ReadToEndAsync();
         }
 
-        // Парсим данные формы
         var parsedData = HttpUtility.ParseQueryString(postData);
 
         string name = parsedData["name"];

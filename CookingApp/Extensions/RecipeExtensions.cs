@@ -1,15 +1,14 @@
 namespace CookingApp.Extensions;
-
 using System.Text;
 using CookingApp.Models;
 
-public static class HtmlExtensions
+public static class RecipeExtensions
 {
     public static string AsHtml(this IEnumerable<Recipe> recipes)
     {
-        var sb = new StringBuilder();
-        
-         sb.Append(@"
+        var stringBuilder = new StringBuilder();
+
+        stringBuilder.Append(@"
             <style>
                 body {
                     font-family: Arial, sans-serif;
@@ -67,23 +66,20 @@ public static class HtmlExtensions
             </style>
             ");
 
+
         foreach (var recipe in recipes)
         {
-            sb.Append("<div class=\"recipe\">");
-            sb.Append($"<h2>{recipe.Name}</h2>");
-            sb.Append($"<p><strong>Category:</strong> {recipe.Category}</p>");
-
-            sb.Append("<p><strong>Ingredients:</strong><ul>");
+            stringBuilder.Append("<div class='recipe'>");
+            stringBuilder.Append($"<h2>{recipe.Name}</h2>");
+            stringBuilder.Append("<ul>");
             foreach (var ingredient in recipe.Ingredients)
             {
-                sb.Append($"<li>{ingredient}</li>");
+                stringBuilder.Append($"<li>{ingredient}</li>");
             }
-            sb.Append("</ul></p>");
-
-            sb.Append($"<p><strong>Instructions:</strong><br>{recipe.Instructions.Replace("\n", "<br>")}</p>");
-            sb.Append("</div><hr>");
+            stringBuilder.Append("</ul>");
+            stringBuilder.Append($"<p>{recipe.Instructions}</p>");
+            stringBuilder.Append("</div>");
         }
-
-        return sb.ToString();
+        return stringBuilder.ToString();
     }
 }

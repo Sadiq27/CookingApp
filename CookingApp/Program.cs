@@ -1,8 +1,5 @@
-﻿using System;
-using System.Net;
+﻿using System.Net;
 using System.Reflection;
-using System.Text;
-using System.IO;
 using CookingApp.Attributes.Http.Base;
 using CookingApp.Controllers.Base;
 using CookingApp.Controllers;
@@ -23,7 +20,6 @@ while (true)
     var response = context.Response;
     var handled = false;
 
-    // Обработка корневого пути с использованием HomeController и метода Index
     if (request.Url.AbsolutePath == "/" && request.HttpMethod == "GET")
     {
         var homeController = new HomeController();
@@ -34,7 +30,6 @@ while (true)
     }
     else
     {
-        // Ваша существующая логика маршрутизации для других путей
         foreach (Type controllerType in Assembly.GetExecutingAssembly().GetTypes())
         {
             if (controllerType.IsSubclassOf(typeof(ControllerBase)))
@@ -52,7 +47,8 @@ while (true)
                         if (request.HttpMethod.Equals(attribute.MethodType, StringComparison.OrdinalIgnoreCase) &&
                             expectedPath.Equals(request.Url.AbsolutePath, StringComparison.OrdinalIgnoreCase))
                         {
-                            await (Task)method.Invoke(controller, Array.Empty<object>());
+                            var parameters = PrepareParameters(method, request, response);
+                            await (Task)method.Invoke(controller, parameters);
                             handled = true;
                             break;
                         }
@@ -73,3 +69,33 @@ while (true)
 
     response.Close();
 }
+
+object[] PrepareParameters(MethodInfo method, HttpListenerRequest request, HttpListenerResponse response)
+{
+    var paramInfos = method.GetParameters();
+    var paramsArray = new object[paramInfos.Length];
+    for (int i = 0; i < paramInfos.Length; i++)
+    {
+        var type = paramInfos[i].ParameterType;
+        var name = paramInfos[i].Name;
+
+        if (type == typeof(HttpListenerRequest))
+        {
+            paramsArray[i] = request;
+        }
+        else if (type == typeof(HttpListenerResponse))
+        {
+            paramsArray[i] = response;
+        }
+        else if (type == typeof(string))
+        {
+            paramsArray[i] = request.QueryString[name];
+        }
+        else
+        {
+            throw new ArgumentException($"Unsupported parameter type {type.Name} in method {method.Name}");
+        }
+    }
+    return paramsArray;
+}
+
