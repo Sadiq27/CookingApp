@@ -1,32 +1,46 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
+using CookingApp.Models;
+using CookingApp.Repositories;
 
-namespace CookingApp.Controllers
+namespace CookingApp.Controllers;
+
+public class RecipesController : Controller
 {
-    [Route("[controller]")]
-    public class RecipesController : Controller
+    private readonly RecipeJsonRepository recipeRepository;
+
+    public RecipesController()
     {
-        private readonly ILogger<RecipesController> _logger;
+        recipeRepository = new RecipeJsonRepository();
+    }
 
-        public RecipesController(ILogger<RecipesController> logger)
+    [HttpGet("Recipes/GetAll")]
+    public async Task<IActionResult> GetAllRecipesAsync()
+    {
+        var recipes = await recipeRepository.GetAllRecipesAsync();
+        if (recipes != null && recipes.Any())
         {
-            _logger = logger;
+            return View("GetAllRecipes", recipes);
         }
+        else
+        {
+            return NotFound("No recipes found");
+        }
+    }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
+    [HttpGet("Recipes/Create")]
+    public IActionResult Create()
+    {
+        return View();
+    }
 
-        [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
-        public IActionResult Error()
+    [HttpPost("Recipes/Create")]
+    public async Task<IActionResult> CreateNewRecipe(Recipe recipe)
+    {
+        if (ModelState.IsValid)
         {
-            return View("Error!");
+            await recipeRepository.CreateNewRecipeAsync(recipe);
+            return RedirectToAction("GetAllRecipes");
         }
+        return View(recipe);
     }
 }
