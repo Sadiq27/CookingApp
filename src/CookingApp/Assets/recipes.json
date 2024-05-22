@@ -1,0 +1,55 @@
+[
+  {
+    "Id": null,
+    "Name": "Chocolate Cake",
+    "Category": "Dessert",
+    "Ingredients": [
+      "flour",
+      "sugar",
+      "cocoa powder",
+      "eggs",
+      "butter",
+      "water"
+    ],
+    "Instructions": "1. Mix the dry ingredients together. 2. Add the wet ingredients and stir well. 3. Pour the batter into a cake pan and bake at 350\u00B0F (175\u00B0C) for 30 minutes."
+  },
+  {
+    "Id": null,
+    "Name": "Spaghetti Carbonara",
+    "Category": "Main Course",
+    "Ingredients": [
+      "spaghetti",
+      "eggs",
+      "parmesan cheese",
+      "pancetta",
+      "black pepper"
+    ],
+    "Instructions": "1. Cook the spaghetti. 2. Fry the pancetta until crispy. 3. Beat the eggs with parmesan and pepper. 4. Combine everything in a hot pan off the heat, stirring quickly to create a creamy sauce."
+  },
+  {
+    "Id": null,
+    "Name": "Caesar Salad",
+    "Category": "Salad",
+    "Ingredients": [
+      "romaine lettuce",
+      "croutons",
+      "parmesan cheese",
+      "Caesar dressing"
+    ],
+    "Instructions": "1. Wash and chop the romaine lettuce. 2. Toss with croutons, parmesan, and Caesar dressing. 3. Serve chilled."
+  },
+  {
+    "Id": null,
+    "Name": "Apple Pie",
+    "Category": "Dessert",
+    "Ingredients": [
+      "apples",
+      "sugar",
+      "flour",
+      "butter",
+      "cinnamon",
+      "pie crust"
+    ],
+    "Instructions": "1. Prepare the pie crust and place it in a baking dish. 2. Mix sliced apples with sugar, cinnamon, and a bit of flour. 3. Fill the crust with the apple mixture. 4. Top with another layer of crust and bake at 375\u00B0F (190\u00B0C) for about 50 minutes."
+  }
+]
