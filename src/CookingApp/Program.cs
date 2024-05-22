@@ -1,7 +1,20 @@
+using CookingApp.Repositories;
+using CookingApp.Services;
+using Microsoft.Extensions.Configuration;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddControllersWithViews();
+
+string connectionString = builder.Configuration.GetConnectionString("MsSqlServer");
+
+builder.Services.AddScoped<ICategoryRepository>(sp => new CategoryRepository(connectionString));
+builder.Services.AddScoped<ICategoryService, CategoryService>();
+
+
 
 var app = builder.Build();
 
@@ -23,5 +36,10 @@ app.UseAuthorization();
 app.MapControllerRoute(
     name: "default",
     pattern: "{controller=Home}/{action=Index}/{id?}");
+
+app.MapControllerRoute(
+    name: "categories",
+    pattern: "Categories/{action=Index}/{id?}",
+    defaults: new { controller = "Categories" });
 
 app.Run();
