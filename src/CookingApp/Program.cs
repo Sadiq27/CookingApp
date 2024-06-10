@@ -1,3 +1,4 @@
+using CookingApp.Middleware;
 using CookingApp.Repositories;
 using CookingApp.Services;
 using Microsoft.Extensions.Configuration;
@@ -32,6 +33,8 @@ app.UseStaticFiles();
 app.UseRouting();
 
 app.UseAuthorization();
+
+app.UseMiddleware<RequestLoggingMiddleware>();
 
 app.MapControllerRoute(
     name: "default",
