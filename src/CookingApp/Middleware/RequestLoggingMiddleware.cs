@@ -1,29 +1,34 @@
+using System;
 using System.Data;
 using System.Data.SqlClient;
-using Dapper;
+using System.IO;
+using System.Threading.Tasks;
 using CookingApp.Models;
+using Dapper;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using System.Data.SqlTypes;
 
 namespace CookingApp.Middleware
 {
     public class RequestLoggingMiddleware
     {
-        private readonly RequestDelegate next;
-        private readonly string connectionString;
-        private readonly bool loggingEnabled;
+        private readonly RequestDelegate _next;
+        private readonly string _connectionString;
+        private readonly bool _loggingEnabled;
 
         public RequestLoggingMiddleware(RequestDelegate next, IConfiguration configuration)
         {
-            next = next;
-            connectionString = configuration.GetConnectionString("MsSqlServer");
-            loggingEnabled = configuration.GetValue<bool>("Logging1:LogRequests:Enabled");
+            _next = next ?? throw new ArgumentNullException(nameof(next));
+            _connectionString = configuration.GetConnectionString("MsSqlServer");
+            _loggingEnabled = configuration.GetValue<bool>("Logging1:LogRequests:Enabled");
         }
 
         public async Task Invoke(HttpContext context)
         {
-            if (!loggingEnabled)
+            if (!_loggingEnabled)
             {
-                await next(context);
+                await _next(context);
                 return;
             }
 
@@ -46,13 +51,13 @@ namespace CookingApp.Middleware
 
             try
             {
-                await LogRequestAsync(requestLog);
-
-                await next(context);
+                await _next(context);
                 response.Body.Seek(0, SeekOrigin.Begin);
                 await responseBodyStream.CopyToAsync(originalResponseBodyStream);
                 requestLog.ResponseBody = await ReadResponseBodyAsync(response.Body);
                 requestLog.StatusCode = response.StatusCode;
+
+                await LogRequestAsync(requestLog);
             }
             catch (Exception ex)
             {
@@ -62,11 +67,9 @@ namespace CookingApp.Middleware
             finally
             {
                 requestLog.EndDate = DateTime.UtcNow;
-
                 response.Body = originalResponseBodyStream;
             }
         }
-
 
         private async Task<string> ReadRequestBodyAsync(HttpRequest request)
         {
@@ -87,7 +90,7 @@ namespace CookingApp.Middleware
 
         private async Task LogRequestAsync(RequestLog logEntry)
         {
-            using (IDbConnection db = new SqlConnection(connectionString))
+            using (IDbConnection db = new SqlConnection(_connectionString))
             {
                 var query = @"insert into RequestLogs (Url, RequestBody, ResponseBody, CreationDate, EndDate, StatusCode, HttpMethod)
                             values (@Url, @RequestBody, @ResponseBody, @CreationDate, @EndDate, @StatusCode, @HttpMethod)";
@@ -111,6 +114,5 @@ namespace CookingApp.Middleware
             }
             return dateTime;
         }
-
     }
 }
