@@ -1,7 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
 using CookingApp.Models;
 using CookingApp.Services;
-using System;
 using System.Threading.Tasks;
 
 namespace CookingApp.Controllers
@@ -9,18 +8,18 @@ namespace CookingApp.Controllers
     [Route("Categories")]
     public class CategoriesController : Controller
     {
-        private readonly ICategoryService categoryService;
+        private readonly ICategoryService _categoryService;
 
         public CategoriesController(ICategoryService categoryService)
         {
-            this.categoryService = categoryService ?? throw new ArgumentNullException(nameof(categoryService));
+            _categoryService = categoryService ?? throw new ArgumentNullException(nameof(categoryService));
         }
 
         [HttpGet("")]
         [HttpGet("Index")]
         public async Task<IActionResult> Index()
         {
-            var categories = await categoryService.GetAllCategoriesAsync();
+            var categories = await _categoryService.GetAllCategoriesAsync();
             return View(categories);
         }
 
@@ -35,7 +34,7 @@ namespace CookingApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                await categoryService.CreateCategoryAsync(category);
+                await _categoryService.CreateCategoryAsync(category);
                 return RedirectToAction(nameof(Index));
             }
             return View(category);
@@ -44,7 +43,7 @@ namespace CookingApp.Controllers
         [HttpGet("Edit/{id}")]
         public async Task<IActionResult> Edit(int id)
         {
-            var category = await categoryService.GetCategoryByIdAsync(id);
+            var category = await _categoryService.GetCategoryByIdAsync(id);
             if (category == null)
             {
                 return NotFound();
@@ -57,7 +56,7 @@ namespace CookingApp.Controllers
         {
             if (ModelState.IsValid)
             {
-                await categoryService.UpdateCategoryAsync(category);
+                await _categoryService.UpdateCategoryAsync(category);
                 return RedirectToAction(nameof(Index));
             }
             return View(category);
@@ -66,7 +65,7 @@ namespace CookingApp.Controllers
         [HttpGet("Delete/{id}")]
         public async Task<IActionResult> Delete(int id)
         {
-            var category = await categoryService.GetCategoryByIdAsync(id);
+            var category = await _categoryService.GetCategoryByIdAsync(id);
             if (category == null)
             {
                 return NotFound();
@@ -77,7 +76,7 @@ namespace CookingApp.Controllers
         [HttpPost("Delete/{id}"), ActionName("Delete")]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            await categoryService.DeleteCategoryAsync(id);
+            await _categoryService.DeleteCategoryAsync(id);
             return RedirectToAction(nameof(Index));
         }
     }

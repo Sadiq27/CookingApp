@@ -7,36 +7,36 @@ namespace CookingApp.Services
 {
     public class CategoryService : ICategoryService
     {
-        private readonly ICategoryRepository categoryRepository;
+        private readonly ICategoryRepository _categoryRepository;
 
         public CategoryService(ICategoryRepository categoryRepository)
         {
-            this.categoryRepository = categoryRepository;
+            _categoryRepository = categoryRepository;
         }
 
         public Task<IEnumerable<Category>> GetAllCategoriesAsync()
         {
-            return categoryRepository.GetAllCategoriesAsync();
+            return _categoryRepository.GetAllCategoriesAsync();
         }
 
         public Task<Category> GetCategoryByIdAsync(int id)
         {
-            return categoryRepository.GetCategoryByIdAsync(id);
+            return _categoryRepository.GetCategoryByIdAsync(id);
         }
 
         public Task<int> CreateCategoryAsync(Category category)
         {
-            return categoryRepository.CreateCategoryAsync(category);
+            return _categoryRepository.CreateCategoryAsync(category);
         }
 
         public Task<bool> UpdateCategoryAsync(Category category)
         {
-            return categoryRepository.UpdateCategoryAsync(category);
+            return _categoryRepository.UpdateCategoryAsync(category);
         }
 
         public Task<bool> DeleteCategoryAsync(int id)
         {
-            return categoryRepository.DeleteCategoryAsync(id);
+            return _categoryRepository.DeleteCategoryAsync(id);
         }
     }
 }
