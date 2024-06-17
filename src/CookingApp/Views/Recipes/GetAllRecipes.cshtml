@@ -61,7 +61,7 @@
 
 <a class="btn" href="/Recipes/Create">Create new Recipe</a><br>
 
-@foreach (var recipe in Model) {
+@* @foreach (var recipe in Model) {
     <div class='recipe'>
         <h2>@recipe.Name</h2>
         <p>@recipe.Category</p>
@@ -72,4 +72,25 @@
             }
         </ul>
     </div>
+} *@
+@model List<CookingApp.Models.Recipe>
+
+@foreach (var recipe in Model)
+{
+    <h3>@recipe.Name</h3>
+    <p>Category: @recipe.Category</p>
+    
+    @if (recipe.Ingredients != null)
+    {
+        <h4>Ingredients:</h4>
+        <ul>
+            @foreach (var ingredient in recipe.Ingredients)
+            {
+                <li>@ingredient</li>
+            }
+        </ul>
+    }
+
+    <p>Instructions: @recipe.Instructions</p>
+    <hr />
 }

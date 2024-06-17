@@ -11,5 +11,15 @@ namespace CookingApp.Data
         }
 
         public DbSet<Category> Categories { get; set; }
+        public DbSet<Recipe> Recipes { get; set; }
+        public DbSet<RecipeIngredient> RecipeIngredients { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<Recipe>().HasKey(r => r.Id);
+            modelBuilder.Entity<List<string>>().HasNoKey();
+
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }
