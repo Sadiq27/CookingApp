@@ -1,4 +1,4 @@
-using System.ComponentModel.DataAnnotations.Schema;
+using System.Collections.Generic;
 
 namespace CookingApp.Models
 {
@@ -7,11 +7,7 @@ namespace CookingApp.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public string Category { get; set; }
-        
-        [NotMapped]
-        public List<string> Ingredients { get; set; }
-        
         public string Instructions { get; set; }
+        public ICollection<RecipeIngredient> Ingredients { get; set; }
     }
-
 }

@@ -2,24 +2,16 @@
 
 #nullable disable
 
+#pragma warning disable CA1814 // Prefer jagged arrays over multidimensional
+
 namespace CookingApp.Migrations
 {
     /// <inheritdoc />
-    public partial class AddRecipesTable : Migration
+    public partial class AddRecipeAndIngredients : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.CreateTable(
-                name: "List<string>",
-                columns: table => new
-                {
-                    Capacity = table.Column<int>(type: "int", nullable: false)
-                },
-                constraints: table =>
-                {
-                });
-
             migrationBuilder.CreateTable(
                 name: "Recipes",
                 columns: table => new
@@ -41,8 +33,8 @@ namespace CookingApp.Migrations
                 {
                     Id = table.Column<int>(type: "int", nullable: false)
                         .Annotation("SqlServer:Identity", "1, 1"),
-                    RecipeId = table.Column<int>(type: "int", nullable: false),
-                    IngredientName = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    Ingredient = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    RecipeId = table.Column<int>(type: "int", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -55,6 +47,33 @@ namespace CookingApp.Migrations
                         onDelete: ReferentialAction.Cascade);
                 });
 
+            migrationBuilder.InsertData(
+                table: "Recipes",
+                columns: new[] { "Id", "Category", "Instructions", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Pasta", "Cook spaghetti. Mix eggs and cheese. Cook pancetta. Combine everything.", "Spaghetti Carbonara" },
+                    { 2, "Soup", "Cook onions and garlic. Add tomatoes. Simmer. Blend. Season.", "Tomato Soup" }
+                });
+
+            migrationBuilder.InsertData(
+                table: "RecipeIngredients",
+                columns: new[] { "Id", "Ingredient", "RecipeId" },
+                values: new object[,]
+                {
+                    { 1, "Spaghetti", 1 },
+                    { 2, "Eggs", 1 },
+                    { 3, "Pancetta", 1 },
+                    { 4, "Parmesan", 1 },
+                    { 5, "Pepper", 1 },
+                    { 6, "Tomatoes", 2 },
+                    { 7, "Onions", 2 },
+                    { 8, "Garlic", 2 },
+                    { 9, "Basil", 2 },
+                    { 10, "Salt", 2 },
+                    { 11, "Pepper", 2 }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_RecipeIngredients_RecipeId",
                 table: "RecipeIngredients",
@@ -64,9 +83,6 @@ namespace CookingApp.Migrations
         /// <inheritdoc />
         protected override void Down(MigrationBuilder migrationBuilder)
         {
-            migrationBuilder.DropTable(
-                name: "List<string>");
-
             migrationBuilder.DropTable(
                 name: "RecipeIngredients");
 
