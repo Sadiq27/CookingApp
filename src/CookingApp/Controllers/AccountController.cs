@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace CookingApp.Controllers
 {
@@ -32,6 +33,11 @@ namespace CookingApp.Controllers
         [HttpPost("/Account/Register", Name = "RegistrationEndpoint")]
         public async Task<IActionResult> Register(UserRegisterDto registrationDto)
         {
+            if (!ModelState.IsValid)
+            {
+                return View(registrationDto);
+            }
+
             try
             {
                 var existingUser = await _context.Users.FirstOrDefaultAsync(u => u.Username == registrationDto.Username);
@@ -74,20 +80,30 @@ namespace CookingApp.Controllers
         [HttpPost("/Account/Login", Name = "LoginEndpoint")]
         public async Task<IActionResult> Login(UserLoginDto loginDto)
         {
-            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == loginDto.Username);
-
-            if (user == null || !BCrypt.Net.BCrypt.Verify(loginDto.Password, user.Password))
+            if (!ModelState.IsValid)
             {
-                TempData["error"] = "Incorrect login or password!";
-                return RedirectToRoute("LoginView");
+                return View(loginDto);
             }
 
-            var claims = new ClaimsIdentity(new[]
+            var user = await _context.Users.FirstOrDefaultAsync(u => u.Username == loginDto.Username);
+
+            if (user == null || string.IsNullOrEmpty(loginDto.Password) || !BCrypt.Net.BCrypt.Verify(loginDto.Password, user.Password))
+            {
+                ModelState.AddModelError(string.Empty, "Incorrect login or password!");
+                return View(loginDto);
+            }
+
+            string role = user.Username.ToLower() == "admin" ? "Admin" : "User";
+
+            var claims = new[]
             {
                 new Claim(ClaimTypes.Name, user.Username),
-            }, CookieAuthenticationDefaults.AuthenticationScheme);
+                new Claim(ClaimTypes.Role, role)
+            };
 
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claims));
+            var claimsIdentity = new ClaimsIdentity(claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
 
             return RedirectToAction("Index", "Home");
         }

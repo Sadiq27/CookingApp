@@ -31,8 +31,14 @@
                         <li class="nav-item">
                             <a class="nav-link text-dark" asp-area="" asp-controller="Categories" asp-action="Index">Categories</a>
                         </li>
+                        @if (User.Identity.IsAuthenticated && User.IsInRole("Admin"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Admin" asp-action="Index">Admin Panel</a>
+                            </li>
+                        }
                     </ul>
-                    <ul class="navbar-nav">
+                    <ul class="navbar-nav flex-grow-2">
                         @if (User.Identity.IsAuthenticated)
                         {
                             <li class="nav-item">
@@ -53,6 +59,7 @@
             </div>
         </nav>
     </header>
+
     <div class="container">
         <main role="main" class="pb-3">
             @RenderBody()

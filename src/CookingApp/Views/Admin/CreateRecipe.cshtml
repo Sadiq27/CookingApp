@@ -1,0 +1,32 @@
+@model CookingApp.Models.Recipe
+
+@{
+    ViewData["Title"] = "Create Recipe";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Create Recipe</h2>
+
+<form asp-action="CreateRecipe" method="post">
+    <div class="form-group">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Category"></label>
+        <input asp-for="Category" class="form-control" />
+        <span asp-validation-for="Category" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Ingredients"></label>
+        <input asp-for="Ingredients" class="form-control" />
+        <span asp-validation-for="Ingredients" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Instructions"></label>
+        <textarea asp-for="Instructions" class="form-control"></textarea>
+        <span asp-validation-for="Instructions" class="text-danger"></span>
+    </div>
+    <button type="submit" class="btn btn-primary">Create</button>
+</form>

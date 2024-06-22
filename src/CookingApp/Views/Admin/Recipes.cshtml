@@ -1,0 +1,25 @@
+@model IEnumerable<CookingApp.Models.Recipe>
+
+@{
+    ViewData["Title"] = "Recipes";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Recipes</h2>
+
+<p>
+    <a asp-action="CreateRecipe" class="btn btn-primary">Create New Recipe</a>
+</p>
+
+@foreach (var recipe in Model)
+{
+    <div class="card">
+        <div class="card-body">
+            <h5 class="card-title">@recipe.Name</h5>
+            <p class="card-text">Category: @recipe.Category</p>
+            <a href="@Url.Action("EditRecipe", new { id = recipe.Id })" class="btn btn-primary">Edit</a>
+            <a href="@Url.Action("DeleteRecipe", new { id = recipe.Id })" class="btn btn-danger">Delete</a>
+        </div>
+    </div>
+    <br />
+}
