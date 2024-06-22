@@ -1,5 +1,5 @@
-using Microsoft.EntityFrameworkCore;
 using CookingApp.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace CookingApp.Data
 {
@@ -13,6 +13,7 @@ namespace CookingApp.Data
         public DbSet<Category> Categories { get; set; }
         public DbSet<Recipe> Recipes { get; set; }
         public DbSet<RecipeIngredient> RecipeIngredients { get; set; }
+        public DbSet<User> Users { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
@@ -54,6 +55,15 @@ namespace CookingApp.Data
                 new RecipeIngredient { Id = 10, Ingredient = "Salt", RecipeId = 2 },
                 new RecipeIngredient { Id = 11, Ingredient = "Pepper", RecipeId = 2 }
             );
+
+            var adminUser = new User
+            {
+                Id = 1,
+                Username = "admin",
+                Password = BCrypt.Net.BCrypt.HashPassword("admin123"),
+            };
+
+            modelBuilder.Entity<User>().HasData(adminUser);
 
             base.OnModelCreating(modelBuilder);
         }
