@@ -21,11 +21,38 @@ namespace CookingApp.Repositories
             return await _context.Recipes.ToListAsync();
         }
 
+        public async Task<Recipe> GetRecipeByIdAsync(int id)
+        {
+            return await _context.Recipes
+                .Include(r => r.Ingredients)
+                .FirstOrDefaultAsync(r => r.Id == id);
+        }
+
         public async Task<Recipe> CreateNewRecipeAsync(Recipe recipe)
         {
             _context.Recipes.Add(recipe);
             await _context.SaveChangesAsync();
             return recipe;
+        }
+
+        public async Task UpdateRecipeAsync(Recipe recipe)
+        {
+            var existingRecipe = await _context.Recipes.FindAsync(recipe.Id);
+            if (existingRecipe != null)
+            {
+                _context.Entry(existingRecipe).CurrentValues.SetValues(recipe);
+                await _context.SaveChangesAsync();
+            }
+        }
+
+        public async Task DeleteRecipeAsync(int id)
+        {
+            var recipe = await _context.Recipes.FindAsync(id);
+            if (recipe != null)
+            {
+                _context.Recipes.Remove(recipe);
+                await _context.SaveChangesAsync();
+            }
         }
     }
 }

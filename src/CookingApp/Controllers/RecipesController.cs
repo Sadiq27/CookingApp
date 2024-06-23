@@ -27,21 +27,21 @@ namespace CookingApp.Controllers
             }
         }
 
-        // [HttpGet("Recipes/Create")]
-        // public IActionResult Create()
-        // {
-        //     return View();
-        // }
+        [HttpGet("Recipes/Create")]
+        public IActionResult Create()
+        {
+            return View();
+        }
 
-        // [HttpPost("Recipes/Create")]
-        // public async Task<IActionResult> CreateNewRecipe(Recipe recipe)
-        // {
-        //     if (ModelState.IsValid)
-        //     {
-        //         await _recipeRepository.CreateNewRecipeAsync(recipe);
-        //         return RedirectToAction("GetAllRecipes");
-        //     }
-        //     return View(recipe);
-        // }
+        [HttpPost("Recipes/Create")]
+        public async Task<IActionResult> CreateNewRecipe(Recipe recipe)
+        {
+            if (ModelState.IsValid)
+            {
+                await _recipeRepository.CreateNewRecipeAsync(recipe);
+                return RedirectToAction("GetAllRecipes");
+            }
+            return View(recipe);
+        }
     }
 }

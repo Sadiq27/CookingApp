@@ -1,5 +1,6 @@
 @model List<CookingApp.Models.Recipe>
-    
+@using Microsoft.AspNetCore.Authorization
+
 @{
     ViewData["Title"] = "Recipes";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -38,6 +39,7 @@
     li {
         margin-bottom: 5px;
     }
+
     .btn {
         text-decoration: none;
         color: #333;
@@ -61,6 +63,11 @@
     }
 </style>
 
+@if (User.IsInRole("Admin"))
+{
+    <a class="btn" href="/Admin/CreateRecipe">Create new Recipe</a><br>
+}
+
 @foreach (var recipe in Model)
 {
     <h3>@recipe.Name</h3>
@@ -78,5 +85,11 @@
     }
 
     <p>Instructions: @recipe.Instructions</p>
+
+    @if (User.IsInRole("Admin"))
+    {
+        <a class="btn" href="/Admin/EditRecipe/@recipe.Id">Edit</a>
+        <a class="btn" href="/Admin/DeleteRecipe/@recipe.Id">Delete</a>
+    }
     <hr />
 }
