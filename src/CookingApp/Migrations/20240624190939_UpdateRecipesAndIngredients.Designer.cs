@@ -3,6 +3,7 @@ using CookingApp.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -10,9 +11,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CookingApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240624190939_UpdateRecipesAndIngredients")]
+    partial class UpdateRecipesAndIngredients
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -36,6 +39,18 @@ namespace CookingApp.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Pasta"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Soup"
+                        });
                 });
 
             modelBuilder.Entity("CookingApp.Models.Recipe", b =>
@@ -46,9 +61,8 @@ namespace CookingApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Category")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
 
                     b.Property<string>("Instructions")
                         .IsRequired()
@@ -60,20 +74,22 @@ namespace CookingApp.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CategoryId");
+
                     b.ToTable("Recipes");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            Category = "Pasta",
+                            CategoryId = 1,
                             Instructions = "Cook spaghetti. Mix eggs and cheese. Cook pancetta. Combine everything.",
                             Name = "Spaghetti Carbonara"
                         },
                         new
                         {
                             Id = 2,
-                            Category = "Soup",
+                            CategoryId = 2,
                             Instructions = "Cook onions and garlic. Add tomatoes. Simmer. Blend. Season.",
                             Name = "Tomato Soup"
                         });
@@ -193,9 +209,20 @@ namespace CookingApp.Migrations
                         new
                         {
                             Id = 1,
-                            Password = "$2a$11$y4fUB2bzLZoCqpaOvbVXqOvTR/lwao91Rm2aDDCC0YZlAdq3oujVS",
+                            Password = "$2a$11$raqZ/3s.7/5XCS7tsIp7vu6OzXbEoFR9v6dY3TF5KN8sIRuiqPwze",
                             Username = "admin"
                         });
+                });
+
+            modelBuilder.Entity("CookingApp.Models.Recipe", b =>
+                {
+                    b.HasOne("CookingApp.Models.Category", "Category")
+                        .WithMany()
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
                 });
 
             modelBuilder.Entity("CookingApp.Models.RecipeIngredient", b =>
