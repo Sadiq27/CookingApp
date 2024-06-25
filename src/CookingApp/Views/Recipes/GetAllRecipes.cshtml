@@ -1,0 +1,132 @@
+@model List<CookingApp.Models.Recipe>
+@using Microsoft.AspNetCore.Authorization
+
+@{
+    ViewData["Title"] = "Recipes";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<style>
+    body {
+        font-family: Arial, sans-serif;
+        background-color: #f8f8f8;
+    }
+
+    .recipe-card {
+        background-color: #ffffff;
+        padding: 20px;
+        margin-top: 25px;
+        margin-bottom: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    }
+
+    .recipe-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    h3 {
+        color: #333;
+        margin-top: 0;
+    }
+
+    p {
+        color: #666;
+        line-height: 1.6;
+    }
+
+    ul {
+        margin: 10px 0;
+        padding-left: 20px;
+    }
+
+    li {
+        margin-bottom: 5px;
+    }
+
+    .btn {
+        text-decoration: none;
+        color: #fff;
+        padding: 10px 20px;
+        border-radius: 14px;
+    }
+
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+        border-color: #5a6268;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        border-color: #dc3545;
+    }
+
+    .btn-danger:hover {
+        background-color: #c82333;
+        border-color: #bd2130;
+    }
+
+    hr {
+        border: 0;
+        height: 1px;
+        background-color: #eaeaea;
+        margin: 20px 0;
+    }
+</style>
+
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center">
+        <h2>Recipes</h2>
+        @if (User.IsInRole("Admin"))
+        {
+            <a class="btn btn-primary" href="/Admin/CreateRecipe">Create new Recipe</a>
+        }
+    </div>
+
+    @foreach (var recipe in Model)
+    {
+        <div class="recipe-card">
+            <div class="recipe-header">
+                <h3>@recipe.Name</h3>
+                @if (User.IsInRole("Admin"))
+                {
+                    <div>
+                        <a class="btn btn-secondary" href="/Admin/EditRecipe/@recipe.Id">Edit</a>
+                        <a class="btn btn-danger" href="/Admin/DeleteRecipe/@recipe.Id">Delete</a>
+                    </div>
+                }
+            </div>
+            <p>Category: @recipe.Category</p>
+
+            @if (recipe.Ingredients != null && recipe.Ingredients.Any())
+            {
+                <h4>Ingredients:</h4>
+                <ul>
+                    @foreach (var ingredient in recipe.Ingredients)
+                    {
+                        <li>@ingredient.Ingredient</li>
+                    }
+                </ul>
+            }
+
+            <p><strong>Instructions:</strong> @recipe.Instructions</p>
+        </div>
+    }
+</div>
