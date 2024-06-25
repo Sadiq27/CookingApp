@@ -20,9 +20,9 @@
             @if (Model.Ingredients != null && Model.Ingredients.Any())
             {
                 <ul>
-                    @foreach (var ingredient in Model.Ingredients)
+                    @foreach (var ingredients in Model.Ingredients)
                     {
-                        <li>@ingredient</li>
+                        <li>@ingredients</li>
                     }
                 </ul>
             }
@@ -33,7 +33,7 @@
         </dd>
         
         <dt>Instructions</dt>
-        <dd>@Model.Instructions</dd>
+        <dd>@Model.Ingredients</dd>
     </dl>
 
     <form asp-action="DeleteRecipe" method="post">

@@ -8,70 +8,25 @@
 <h2>Edit Recipe</h2>
 
 <form asp-action="EditRecipe" method="post">
+    <input type="hidden" asp-for="Id" />
     <div class="form-group">
-        <label asp-for="Name" class="control-label"></label>
+        <label asp-for="Name"></label>
         <input asp-for="Name" class="form-control" />
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
-
     <div class="form-group">
-        <label asp-for="Category" class="control-label"></label>
+        <label asp-for="Category"></label>
         <input asp-for="Category" class="form-control" />
         <span asp-validation-for="Category" class="text-danger"></span>
     </div>
-
     <div class="form-group">
-        <label asp-for="Ingredients" class="control-label">Ingredients</label>
-        <textarea asp-for="Ingredients" class="form-control"></textarea>
-        <span asp-validation-for="Ingredients" class="text-danger"></span>
-    </div>
-
-    <div class="form-group">
-        <label asp-for="Instructions" class="control-label"></label>
+        <label asp-for="Instructions"></label>
         <textarea asp-for="Instructions" class="form-control"></textarea>
         <span asp-validation-for="Instructions" class="text-danger"></span>
     </div>
-
-    <input type="hidden" asp-for="Id" />
-
-    <button type="submit" class="btn btn-primary">Save</button>
-    <a href="@Url.Action("GetAll", "Recipes")" class="btn btn-secondary">Cancel</a>
+    <div class="form-group">
+        <label>Ingredients</label>
+        <textarea asp-for="Ingredients" class="form-control" placeholder="Add ingredients, separated by commas"></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Save Changes</button>
 </form>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
-
-<style>
-    h2 {
-        color: #333;
-    }
-
-    .form-group {
-        margin-bottom: 20px;
-    }
-
-    .form-control {
-        border-radius: 5px;
-        padding: 10px;
-        width: 100%;
-    }
-
-    .btn {
-        margin-top: 20px;
-        text-decoration: none;
-        color: #fff;
-        padding: 10px 20px;
-        border-radius: 5px;
-        background-color: #007bff;
-        border: none;
-    }
-
-    .btn-secondary {
-        background-color: #6c757d;
-    }
-
-    .text-danger {
-        color: #dc3545;
-    }
-</style>

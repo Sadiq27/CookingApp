@@ -12,7 +12,7 @@
         background-color: #f8f8f8;
     }
 
-    div.recipe {
+    .recipe-card {
         background-color: #ffffff;
         padding: 20px;
         margin-top: 25px;
@@ -21,7 +21,13 @@
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
-    h2 {
+    .recipe-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    h3 {
         color: #333;
         margin-top: 0;
     }
@@ -42,17 +48,39 @@
 
     .btn {
         text-decoration: none;
-        color: #333;
-        padding: 10px;
-        border: 2px solid black;
-        border-radius: 14px;
-        background-color: #666;
         color: #fff;
+        padding: 10px 20px;
+        border-radius: 14px;
     }
 
-    p.strong {
-        color: #333;
-        font-weight: bold;
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+        border-color: #5a6268;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        border-color: #dc3545;
+    }
+
+    .btn-danger:hover {
+        background-color: #c82333;
+        border-color: #bd2130;
     }
 
     hr {
@@ -63,33 +91,42 @@
     }
 </style>
 
-@if (User.IsInRole("Admin"))
-{
-    <a class="btn" href="/Admin/CreateRecipe">Create new Recipe</a><br>
-}
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center">
+        <h2>Recipes</h2>
+        @if (User.IsInRole("Admin"))
+        {
+            <a class="btn btn-primary" href="/Admin/CreateRecipe">Create new Recipe</a>
+        }
+    </div>
 
-@foreach (var recipe in Model)
-{
-    <h3>@recipe.Name</h3>
-    <p>Category: @recipe.Category</p>
-    
-    @if (recipe.Ingredients != null)
+    @foreach (var recipe in Model)
     {
-        <h4>Ingredients:</h4>
-        <ul>
-            @foreach (var ingredient in recipe.Ingredients)
+        <div class="recipe-card">
+            <div class="recipe-header">
+                <h3>@recipe.Name</h3>
+                @if (User.IsInRole("Admin"))
+                {
+                    <div>
+                        <a class="btn btn-secondary" href="/Admin/EditRecipe/@recipe.Id">Edit</a>
+                        <a class="btn btn-danger" href="/Admin/DeleteRecipe/@recipe.Id">Delete</a>
+                    </div>
+                }
+            </div>
+            <p>Category: @recipe.Category</p>
+
+            @if (recipe.Ingredients != null && recipe.Ingredients.Any())
             {
-                <li>@ingredient</li>
+                <h4>Ingredients:</h4>
+                <ul>
+                    @foreach (var ingredient in recipe.Ingredients)
+                    {
+                        <li>@ingredient.Ingredient</li>
+                    }
+                </ul>
             }
-        </ul>
-    }
 
-    <p>Instructions: @recipe.Instructions</p>
-
-    @if (User.IsInRole("Admin"))
-    {
-        <a class="btn" href="/Admin/EditRecipe/@recipe.Id">Edit</a>
-        <a class="btn" href="/Admin/DeleteRecipe/@recipe.Id">Delete</a>
+            <p><strong>Instructions:</strong> @recipe.Instructions</p>
+        </div>
     }
-    <hr />
-}
+</div>
