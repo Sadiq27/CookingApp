@@ -37,7 +37,6 @@ namespace CookingApp.Repositories
         public async Task CreateNewRecipeAsync(Recipe recipe, IFormFile image)
         {
             var lastRecipe = await _context.Recipes.OrderByDescending(r => r.Id).FirstOrDefaultAsync();
-            //recipe.Id = (lastRecipe != null) ? lastRecipe.Id + 1 : 1;
 
             var extension = new FileInfo(image.FileName).Extension.Substring(1);
             recipe.Image = $"Assets/Images/{lastRecipe.Id +1}.{extension}";
@@ -55,7 +54,6 @@ namespace CookingApp.Repositories
         public async Task UpdateRecipeAsync(Recipe recipe, IFormFile image)
         {
             var lastRecipe = await _context.Recipes.OrderByDescending(r => r.Id).FirstOrDefaultAsync();
-            //recipe.Id = (lastRecipe != null) ? lastRecipe.Id + 1 : 1;
 
             var extension = new FileInfo(image.FileName).Extension.Substring(1);
             recipe.Image = $"Assets/Images/{lastRecipe.Id +1}.{extension}";
