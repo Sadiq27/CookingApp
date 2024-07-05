@@ -14,6 +14,13 @@ namespace CookingApp.Controllers
         {
             _categoryService = categoryService ?? throw new ArgumentNullException(nameof(categoryService));
         }
+        
+
+        [HttpGet("RecipesByCategory/{id}")]
+        public async Task<IActionResult> RecipesByCategory(int id){
+            var categories = await _categoryService.RecipesByCategory(id);
+            return View(categories);
+        }
 
         [HttpGet("")]
         [HttpGet("Index")]

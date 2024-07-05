@@ -49,5 +49,21 @@ namespace CookingApp.Repositories
             _context.Categories.Remove(category);
             return await _context.SaveChangesAsync() > 0;
         }
+
+        public async Task<Category> RecipesByCategory(int id)
+        {
+            var category = await _context.Categories
+                                .Include(c => c.Recipes) 
+                                .ThenInclude(r => r.RecipeIngredients) 
+                                .ThenInclude(ri => ri.Ingredient) 
+                                .FirstOrDefaultAsync(c => c.Id == id);
+
+            if (category == null)
+            {
+                return null;
+            }
+
+            return category;
+        }
     }
 }
