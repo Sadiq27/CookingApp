@@ -15,25 +15,10 @@
         <dt>Category</dt>
         <dd>@Model.Category</dd>
         
-        <dt>Ingredients</dt>
-        @* <dd>
-            @if (Model.Ingredients != null && Model.Ingredients.Any())
-            {
-                <ul>
-                    @foreach (var ingredients in Model.Ingredients)
-                    {
-                        <li>@ingredients</li>
-                    }
-                </ul>
-            }
-            else
-            {
-                <p>No ingredients listed.</p>
-            }
-        </dd>
+        
         
         <dt>Instructions</dt>
-        <dd>@Model.Ingredients</dd> *@
+        
     </dl>
 
     <form asp-action="DeleteRecipe" method="post">

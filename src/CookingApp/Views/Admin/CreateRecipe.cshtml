@@ -5,23 +5,61 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
+<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0/css/select2.min.css" rel="stylesheet" />
+
 <h2>Create Recipe</h2>
 
-<form asp-action="CreateRecipe" method="post">
+<form asp-action="CreateRecipe" method="post" enctype="multipart/form-data">
+
+    <div class="custom-file">
+        <label asp-for="Image" class="custom-file-label" for="customFile">Cook Image</label>
+        <input asp-for="Image" type="file" class="custom-file-input" id="customFile">
+        <span class="d-block text-danger" asp-validation-for="Image"></span>
+    </div>
+
     <div class="mb-3">
         <label asp-for="Name" class="form-label"></label>
         <input asp-for="Name" class="form-control" />
         <span asp-validation-for="Name" class="text-danger"></span>
     </div>
-    @* <div class="mb-3">
-        <label asp-for="Ingredients" class="form-label"></label>
-        <input asp-for="Ingredients" class="form-control" />
-        <span asp-validation-for="Ingredients" class="text-danger"></span>
-    </div> *@
+
+    <div class="form-group" style="width: 650px;">
+        <label asp-for="CategoryId" for="exampleFormControlSelect2">Category</label>
+        <select asp-for="CategoryId" asp-items="ViewBag.Categories" class="form-control" id="exampleFormControlSelect2"
+            style="width: 519px;">
+        </select>
+        <span asp-validation-for="CategoryId" class="text-danger"></span>
+    </div>
+
+
     <div class="mb-3">
         <label asp-for="Instructions" class="form-label"></label>
         <textarea asp-for="Instructions" class="form-control" rows="5"></textarea>
         <span asp-validation-for="Instructions" class="text-danger"></span>
     </div>
+
+   
+    <div class="form-group">
+        <label asp-for="SelectedIngredientIds">Ingredients</label>
+        <select asp-for="SelectedIngredientIds" class="form-control" multiple>
+            @foreach (var ingredient in ViewBag.Ingredients)
+            {
+                <option value="@ingredient.Id">@ingredient.Name</option>
+            }
+        </select>
+
+        <span asp-validation-for="SelectedIngredientIds" class="text-danger"></span>
+    </div>
+
+
     <button type="submit" class="btn btn-primary">Create</button>
 </form>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.1.0/js/select2.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('select[multiple]').select2();
+        });
+    </script>
+}
