@@ -7,12 +7,10 @@ namespace CookingApp.Models
     {
         public int Id { get; set; }
 
-        [Required]
-        public string Ingredient { get; set; }
-
         public int RecipeId { get; set; }
-
-        [ForeignKey("RecipeId")]
         public Recipe Recipe { get; set; }
+
+        public int IngredientId { get; set; }
+        public Ingredient Ingredient { get; set; }
     }
 }

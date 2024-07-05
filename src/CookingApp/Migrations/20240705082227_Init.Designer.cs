@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CookingApp.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240621190309_AddRoleToUser")]
-    partial class AddRoleToUser
+    [Migration("20240705082227_Init")]
+    partial class Init
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -39,6 +39,92 @@ namespace CookingApp.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Pasta"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Soup"
+                        });
+                });
+
+            modelBuilder.Entity("CookingApp.Models.Ingredient", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Ingredients");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Spaghetti"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Eggs"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Pancetta"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Parmesan"
+                        },
+                        new
+                        {
+                            Id = 5,
+                            Name = "Pepper"
+                        },
+                        new
+                        {
+                            Id = 6,
+                            Name = "Tomatoes"
+                        },
+                        new
+                        {
+                            Id = 7,
+                            Name = "Onions"
+                        },
+                        new
+                        {
+                            Id = 8,
+                            Name = "Garlic"
+                        },
+                        new
+                        {
+                            Id = 9,
+                            Name = "Basil"
+                        },
+                        new
+                        {
+                            Id = 10,
+                            Name = "Salt"
+                        },
+                        new
+                        {
+                            Id = 11,
+                            Name = "Pepper"
+                        });
                 });
 
             modelBuilder.Entity("CookingApp.Models.Recipe", b =>
@@ -49,7 +135,10 @@ namespace CookingApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Category")
+                    b.Property<int>("CategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Image")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -63,20 +152,24 @@ namespace CookingApp.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("CategoryId");
+
                     b.ToTable("Recipes");
 
                     b.HasData(
                         new
                         {
                             Id = 1,
-                            Category = "Pasta",
+                            CategoryId = 1,
+                            Image = "Assets/Images/1.jpg",
                             Instructions = "Cook spaghetti. Mix eggs and cheese. Cook pancetta. Combine everything.",
                             Name = "Spaghetti Carbonara"
                         },
                         new
                         {
                             Id = 2,
-                            Category = "Soup",
+                            CategoryId = 2,
+                            Image = "Assets/Images/2.jpg",
                             Instructions = "Cook onions and garlic. Add tomatoes. Simmer. Blend. Season.",
                             Name = "Tomato Soup"
                         });
@@ -90,14 +183,15 @@ namespace CookingApp.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("Ingredient")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
+                    b.Property<int>("IngredientId")
+                        .HasColumnType("int");
 
                     b.Property<int>("RecipeId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
+
+                    b.HasIndex("IngredientId");
 
                     b.HasIndex("RecipeId");
 
@@ -107,92 +201,68 @@ namespace CookingApp.Migrations
                         new
                         {
                             Id = 1,
-                            Ingredient = "Spaghetti",
+                            IngredientId = 1,
                             RecipeId = 1
                         },
                         new
                         {
                             Id = 2,
-                            Ingredient = "Eggs",
+                            IngredientId = 2,
                             RecipeId = 1
                         },
                         new
                         {
                             Id = 3,
-                            Ingredient = "Pancetta",
+                            IngredientId = 3,
                             RecipeId = 1
                         },
                         new
                         {
                             Id = 4,
-                            Ingredient = "Parmesan",
+                            IngredientId = 4,
                             RecipeId = 1
                         },
                         new
                         {
                             Id = 5,
-                            Ingredient = "Pepper",
+                            IngredientId = 5,
                             RecipeId = 1
                         },
                         new
                         {
                             Id = 6,
-                            Ingredient = "Tomatoes",
+                            IngredientId = 6,
                             RecipeId = 2
                         },
                         new
                         {
                             Id = 7,
-                            Ingredient = "Onions",
+                            IngredientId = 7,
                             RecipeId = 2
                         },
                         new
                         {
                             Id = 8,
-                            Ingredient = "Garlic",
+                            IngredientId = 8,
                             RecipeId = 2
                         },
                         new
                         {
                             Id = 9,
-                            Ingredient = "Basil",
+                            IngredientId = 9,
                             RecipeId = 2
                         },
                         new
                         {
                             Id = 10,
-                            Ingredient = "Salt",
+                            IngredientId = 10,
                             RecipeId = 2
                         },
                         new
                         {
                             Id = 11,
-                            Ingredient = "Pepper",
+                            IngredientId = 11,
                             RecipeId = 2
-                        });
-                });
-
-            modelBuilder.Entity("CookingApp.Models.Role", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Roles");
-
-                    b.HasData(
-                        new
-                        {
-                            Id = 1,
-                            Name = "Admin"
                         });
                 });
 
@@ -203,6 +273,10 @@ namespace CookingApp.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Password")
                         .IsRequired()
@@ -224,26 +298,56 @@ namespace CookingApp.Migrations
                         new
                         {
                             Id = 1,
-                            Password = "$2a$11$IUbeF4/uaysRkd5nSgm4reeW0jZV479nx2PNnnO.Ths6hZn/8.MwO",
+                            Email = "admin@gmail.com",
+                            Password = "$2a$11$pr4poAW2aBv63Iq6.om/i.e1Cu0kHgbtHq1pzYaqPEPqJerpoz2I2",
                             Role = "Admin",
                             Username = "admin"
                         });
                 });
 
+            modelBuilder.Entity("CookingApp.Models.Recipe", b =>
+                {
+                    b.HasOne("CookingApp.Models.Category", "Category")
+                        .WithMany("Recipes")
+                        .HasForeignKey("CategoryId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Category");
+                });
+
             modelBuilder.Entity("CookingApp.Models.RecipeIngredient", b =>
                 {
+                    b.HasOne("CookingApp.Models.Ingredient", "Ingredient")
+                        .WithMany("RecipeIngredients")
+                        .HasForeignKey("IngredientId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.HasOne("CookingApp.Models.Recipe", "Recipe")
-                        .WithMany("Ingredients")
+                        .WithMany("RecipeIngredients")
                         .HasForeignKey("RecipeId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.Navigation("Ingredient");
+
                     b.Navigation("Recipe");
+                });
+
+            modelBuilder.Entity("CookingApp.Models.Category", b =>
+                {
+                    b.Navigation("Recipes");
+                });
+
+            modelBuilder.Entity("CookingApp.Models.Ingredient", b =>
+                {
+                    b.Navigation("RecipeIngredients");
                 });
 
             modelBuilder.Entity("CookingApp.Models.Recipe", b =>
                 {
-                    b.Navigation("Ingredients");
+                    b.Navigation("RecipeIngredients");
                 });
 #pragma warning restore 612, 618
         }

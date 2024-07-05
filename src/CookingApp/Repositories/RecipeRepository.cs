@@ -24,7 +24,7 @@ namespace CookingApp.Repositories
         public async Task<Recipe> GetRecipeByIdAsync(int id)
         {
             return await _context.Recipes
-                .Include(r => r.Ingredients)
+                .Include(r => r.RecipeIngredients)
                 .FirstOrDefaultAsync(r => r.Id == id);
         }
 

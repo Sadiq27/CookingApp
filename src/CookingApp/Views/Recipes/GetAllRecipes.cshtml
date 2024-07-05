@@ -115,7 +115,7 @@
             </div>
             <p>Category: @recipe.Category</p>
 
-            @if (recipe.Ingredients != null && recipe.Ingredients.Any())
+            @* @if (recipe.Ingredients != null && recipe.Ingredients.Any())
             {
                 <h4>Ingredients:</h4>
                 <ul>
@@ -124,7 +124,7 @@
                         <li>@ingredient.Ingredient</li>
                     }
                 </ul>
-            }
+            } *@
 
             <p><strong>Instructions:</strong> @recipe.Instructions</p>
         </div>
