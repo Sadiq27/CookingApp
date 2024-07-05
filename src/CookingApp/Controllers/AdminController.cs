@@ -99,11 +99,11 @@ public class AdminController : Controller
     [HttpPost("Admin/CreateRecipe")]
     public async Task<IActionResult> CreateRecipe(Recipe recipe)
     {
-        if (ModelState.IsValid)
-        {
-            await _recipeRepository.CreateNewRecipeAsync(recipe);
-            return RedirectToAction("GetAll", "Recipes");
-        }
+        // if (ModelState.IsValid)
+        // {
+        //     await _recipeRepository.CreateNewRecipeAsync(recipe);
+        //     return RedirectToAction("GetAll", "Recipes");
+        // }
         return View(recipe);
     }
 
@@ -121,11 +121,11 @@ public class AdminController : Controller
     [HttpPost("Admin/EditRecipe/{id}")]
     public async Task<IActionResult> EditRecipe(Recipe recipe)
     {
-        if (ModelState.IsValid)
-        {
-            await _recipeRepository.UpdateRecipeAsync(recipe);
-            return RedirectToAction("GetAll", "Recipes");
-        }
+        // if (ModelState.IsValid)
+        // {
+        //     await _recipeRepository.UpdateRecipeAsync(recipe);
+        //     return RedirectToAction("GetAll", "Recipes");
+        // }
         return View(recipe);
     }
 

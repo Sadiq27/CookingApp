@@ -8,8 +8,8 @@ namespace CookingApp.Repositories
     {
         Task<List<Recipe>> GetAllRecipesAsync();
         Task<Recipe> GetRecipeByIdAsync(int id);
-        Task<Recipe> CreateNewRecipeAsync(Recipe recipe);
-        Task UpdateRecipeAsync(Recipe recipe);
+        public Task CreateNewRecipeAsync(Recipe recipe, IFormFile image);
+        Task UpdateRecipeAsync(Recipe recipe, IFormFile iamge);
         Task DeleteRecipeAsync(int id);
     }
 }

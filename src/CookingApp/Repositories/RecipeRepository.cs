@@ -18,25 +18,51 @@ namespace CookingApp.Repositories
 
         public async Task<List<Recipe>> GetAllRecipesAsync()
         {
-            return await _context.Recipes.ToListAsync();
+            return await _context.Recipes
+                                .Include(r => r.Category)
+                                .Include(r => r.RecipeIngredients)
+                                    .ThenInclude(ri => ri.Ingredient)
+                                .ToListAsync();
         }
 
-        public async Task<Recipe> GetRecipeByIdAsync(int id)
+        public async Task<Recipe?> GetRecipeByIdAsync(int id)
         {
             return await _context.Recipes
-                .Include(r => r.RecipeIngredients)
-                .FirstOrDefaultAsync(r => r.Id == id);
+                            .Include(r => r.Category)
+                            .Include(r => r.RecipeIngredients)
+                            .ThenInclude(ri => ri.Ingredient)
+                            .FirstOrDefaultAsync(r => r.Id == id);
         }
 
-        public async Task<Recipe> CreateNewRecipeAsync(Recipe recipe)
+        public async Task CreateNewRecipeAsync(Recipe recipe, IFormFile image)
         {
-            _context.Recipes.Add(recipe);
+            var lastRecipe = await _context.Recipes.OrderByDescending(r => r.Id).FirstOrDefaultAsync();
+            //recipe.Id = (lastRecipe != null) ? lastRecipe.Id + 1 : 1;
+
+            var extension = new FileInfo(image.FileName).Extension.Substring(1);
+            recipe.Image = $"Assets/Images/{lastRecipe.Id +1}.{extension}";
+
+            using (var newFileStream = System.IO.File.Create(recipe.Image))
+            {
+                await image.CopyToAsync(newFileStream);
+            }
+
+            await _context.Recipes.AddAsync(recipe);
             await _context.SaveChangesAsync();
-            return recipe;
         }
 
-        public async Task UpdateRecipeAsync(Recipe recipe)
+
+        public async Task UpdateRecipeAsync(Recipe recipe, IFormFile image)
         {
+            var lastRecipe = await _context.Recipes.OrderByDescending(r => r.Id).FirstOrDefaultAsync();
+            //recipe.Id = (lastRecipe != null) ? lastRecipe.Id + 1 : 1;
+
+            var extension = new FileInfo(image.FileName).Extension.Substring(1);
+            recipe.Image = $"Assets/Images/{lastRecipe.Id +1}.{extension}";
+            using (var newFileStream = System.IO.File.Create(recipe.Image))
+            {
+                await image.CopyToAsync(newFileStream);
+            }
             var existingRecipe = await _context.Recipes.FindAsync(recipe.Id);
             if (existingRecipe != null)
             {

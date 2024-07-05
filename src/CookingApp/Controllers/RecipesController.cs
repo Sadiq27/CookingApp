@@ -13,6 +13,18 @@ namespace CookingApp.Controllers
             _recipeRepository = recipeRepository;
         }
 
+        [HttpGet("[controller]/[action]/{id}")]
+        public async Task<IActionResult> Image(int id)
+        {
+            var recipe = await _recipeRepository.GetRecipeByIdAsync(id);
+            if (recipe == null || string.IsNullOrEmpty(recipe.Image))
+            {
+                return NotFound("Film or image not found.");
+            }
+            var fileStream = System.IO.File.Open(recipe.Image!, FileMode.Open);
+            return File(fileStream, "image/jpeg");
+        }
+
         [HttpGet("Recipes/GetAll")]
         public async Task<IActionResult> GetAllRecipesAsync()
         {
@@ -34,13 +46,22 @@ namespace CookingApp.Controllers
         }
 
         [HttpPost("Recipes/Create")]
-        public async Task<IActionResult> CreateNewRecipe(Recipe recipe)
+        public async Task<IActionResult> CreateNewRecipe(Recipe recipe, IFormFile image)
         {
             if (ModelState.IsValid)
             {
-                await _recipeRepository.CreateNewRecipeAsync(recipe);
+                await _recipeRepository.CreateNewRecipeAsync(recipe, image);
                 return RedirectToAction("GetAllRecipes");
             }
+            return View(recipe);
+        }
+
+
+        [HttpGet]
+        [Route("[controller]/{recipe.Name}/{id}", Name = "FilmInfo")]
+        public async Task<IActionResult> More(int id)
+        {
+            var recipe = await _recipeRepository.GetRecipeByIdAsync(id);
             return View(recipe);
         }
     }
