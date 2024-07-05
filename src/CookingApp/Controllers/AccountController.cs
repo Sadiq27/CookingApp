@@ -13,9 +13,11 @@ namespace CookingApp.Controllers
     public class AccountController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly EmailService _emailService;
 
-        public AccountController(ApplicationDbContext context)
+        public AccountController(ApplicationDbContext context, EmailService emailService)
         {
+            _emailService = emailService;
             _context = context;
         }
 
@@ -49,12 +51,21 @@ namespace CookingApp.Controllers
 
                 var newUser = new User
                 {
+                    Email = registrationDto.Email,
                     Username = registrationDto.Username,
                     Password = BCrypt.Net.BCrypt.HashPassword(registrationDto.Password),
                 };
 
-                _context.Users.Add(newUser);
-                await _context.SaveChangesAsync();
+                var verificationCode = _emailService.GenerateVerificationCode();
+                var message = $"Your verification code is: {verificationCode}";
+                await _emailService.SendEmailAsync(newUser.Email, "Email Verification", message);
+
+                HttpContext.Session.SetString("VerificationCode", verificationCode);
+                HttpContext.Session.SetString("UserEmail", newUser.Email);
+                HttpContext.Session.SetString("UserName", newUser.Username);
+                HttpContext.Session.SetString("UserPassword", newUser.Password);
+
+
             }
             catch (Exception ex)
             {
@@ -62,7 +73,7 @@ namespace CookingApp.Controllers
                 return RedirectToRoute("RegistrationView");
             }
 
-            return RedirectToRoute("LoginView");
+            return RedirectToRoute("Verification");
         }
 
         [HttpGet("/Account/Login", Name = "LoginView")]
@@ -93,7 +104,7 @@ namespace CookingApp.Controllers
                 return View(loginDto);
             }
 
-            string role = user.Username.ToLower() == "admin" ? "Admin" : "User";
+            string role = user.Role;
 
             var claims = new[]
             {
@@ -113,6 +124,54 @@ namespace CookingApp.Controllers
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToRoute("LoginView");
+        }
+
+
+        [HttpGet]
+        [Route("/[controller]/[action]", Name = "Verification")]
+        public IActionResult Verification()
+        {
+            return View();
+        }
+
+
+        [HttpPost]
+        [Route("/api/[controller]/[action]", Name = "VerifyCode")]
+        public async Task<IActionResult> VerifyCode([FromForm] string verificationCode)
+        {
+            var sessionCode = HttpContext.Session.GetString("VerificationCode");
+            var email = HttpContext.Session.GetString("UserEmail");
+            var name = HttpContext.Session.GetString("UserName");
+
+            var password = HttpContext.Session.GetString("UserPassword");
+            if (verificationCode == sessionCode)
+            {
+                try
+                {
+                    var user = new User
+                    {
+                        Username = name,
+                        Email = email,
+                        Password = password,
+                        Role = "User"
+                    };
+                    _context.Users.Add(user);
+                    await _context.SaveChangesAsync();
+                    return RedirectToRoute("LoginView");
+                }
+                catch (Exception ex)
+                {
+                    TempData["error"] = ex.Message;
+                    return RedirectToRoute("RegistrationEndpoint");
+                }
+            }
+            else
+            {
+                ModelState.AddModelError("VerificationCode", "Invalid verification code.");
+                return View("Verification");
+            }
+
+
         }
     }
 }

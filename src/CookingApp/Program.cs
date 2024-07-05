@@ -9,6 +9,22 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 
+var emailSettings = builder.Configuration.GetSection("EmailSettings");
+builder.Services.AddSingleton(new EmailService(
+    emailSettings["SmtpServer"],
+    int.Parse(emailSettings["SmtpPort"]),
+    emailSettings["SmtpUser"],
+    emailSettings["SmtpPass"]
+));
+
+builder.Services.AddDistributedMemoryCache();
+builder.Services.AddSession(options =>
+{
+    options.IdleTimeout = TimeSpan.FromMinutes(30); 
+    options.Cookie.HttpOnly = true;
+    options.Cookie.IsEssential = true;
+});
+
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("MsSqlServer")));
 
@@ -44,6 +60,7 @@ app.UseRouting();
 
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseSession();
 
 app.UseMiddleware<RequestLoggingMiddleware>();
 
