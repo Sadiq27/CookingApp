@@ -19,7 +19,7 @@ namespace CookingApp.Controllers
             var recipe = await _recipeRepository.GetRecipeByIdAsync(id);
             if (recipe == null || string.IsNullOrEmpty(recipe.Image))
             {
-                return NotFound("Film or image not found.");
+                return NotFound("Recipe or image not found.");
             }
             var fileStream = System.IO.File.Open(recipe.Image!, FileMode.Open);
             return File(fileStream, "image/jpeg");
@@ -58,7 +58,7 @@ namespace CookingApp.Controllers
 
 
         [HttpGet]
-        [Route("[controller]/{recipe.Name}/{id}", Name = "FilmInfo")]
+        [Route("[controller]/{recipe.Name}/{id}", Name = "RecipeInfo")]
         public async Task<IActionResult> More(int id)
         {
             var recipe = await _recipeRepository.GetRecipeByIdAsync(id);
