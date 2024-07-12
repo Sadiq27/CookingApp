@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using CookingApp.Models;
 using CookingApp.Services;
+using System;
 using System.Threading.Tasks;
 
 namespace CookingApp.Controllers
@@ -12,7 +13,7 @@ namespace CookingApp.Controllers
 
         public CategoriesController(ICategoryService categoryService)
         {
-            this.categoryService = categoryService;
+            this.categoryService = categoryService ?? throw new ArgumentNullException(nameof(categoryService));
         }
 
         [HttpGet("")]
