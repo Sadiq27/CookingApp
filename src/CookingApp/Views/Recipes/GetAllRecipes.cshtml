@@ -1,5 +1,6 @@
 @model List<CookingApp.Models.Recipe>
-    
+@using Microsoft.AspNetCore.Authorization
+
 @{
     ViewData["Title"] = "Recipes";
     Layout = "~/Views/Shared/_Layout.cshtml";
@@ -11,7 +12,7 @@
         background-color: #f8f8f8;
     }
 
-    div.recipe {
+    .recipe-card {
         background-color: #ffffff;
         padding: 20px;
         margin-top: 25px;
@@ -20,7 +21,13 @@
         box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     }
 
-    h2 {
+    .recipe-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+
+    h3 {
         color: #333;
         margin-top: 0;
     }
@@ -38,19 +45,42 @@
     li {
         margin-bottom: 5px;
     }
+
     .btn {
         text-decoration: none;
-        color: #333;
-        padding: 10px;
-        border: 2px solid black;
-        border-radius: 14px;
-        background-color: #666;
         color: #fff;
+        padding: 10px 20px;
+        border-radius: 14px;
     }
 
-    p.strong {
-        color: #333;
-        font-weight: bold;
+    .btn-primary {
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #0056b3;
+    }
+
+    .btn-secondary {
+        background-color: #6c757d;
+        border-color: #6c757d;
+    }
+
+    .btn-secondary:hover {
+        background-color: #5a6268;
+        border-color: #5a6268;
+    }
+
+    .btn-danger {
+        background-color: #dc3545;
+        border-color: #dc3545;
+    }
+
+    .btn-danger:hover {
+        background-color: #c82333;
+        border-color: #bd2130;
     }
 
     hr {
@@ -61,24 +91,44 @@
     }
 </style>
 
-<a class="btn" href="/Recipes/Create">Create new Recipe</a><br>
+<div class="container">
+    <div class="d-flex justify-content-between align-items-center">
+        <h2>Recipes</h2>
+        @if (User.IsInRole("Admin"))
+        {
+            <a class="btn btn-primary" href="/Admin/CreateRecipe">Create new Recipe</a>
+        }
+    </div>
 
-@foreach (var recipe in Model)
-{
-    <h3>@recipe.Name</h3>
-    <p>Category: @recipe.Category</p>
-    
-    @if (recipe.Ingredients != null)
+    @foreach (var recipe in Model)
     {
-        <h4>Ingredients:</h4>
-        <ul>
-            @foreach (var ingredient in recipe.Ingredients)
-            {
-                <li>@ingredient</li>
-            }
-        </ul>
-    }
+        <div class="card mb-3" style="max-width: 540px;">
+            <div class="row g-0">
+                <div class="col-md-4">
+                    <img src="/Recipes/Image/@recipe.Id" class="img-fluid rounded-start" alt="..."
+                        style="max-width: 100%; max-height: 150px;">
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title">@recipe.Name</h5>
+                        <p class="card-text">Category: @recipe.Category.Name</p>
+                        <form asp-controller="Recipes" asp-action="More" asp-route-id="@recipe.Id" method="get">
+                            <input type="hidden" name="_method" value="INFO" />
+                            <button type="submit" class="btn btn-primary">More</button>
+                        </form>
+                        
+                        @if (User.IsInRole("Admin"))
+                        {
+                            <div style="margin-top: 5px;">
+                                <a class="btn btn-secondary" href="/Admin/EditRecipe/@recipe.Id">Edit</a>
+                                <a class="btn btn-danger" href="/Admin/DeleteRecipe/@recipe.Id">Delete</a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        </div>
 
-    <p>Instructions: @recipe.Instructions</p>
-    <hr />
-}
+        
+    }
+</div>

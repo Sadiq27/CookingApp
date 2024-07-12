@@ -1,0 +1,51 @@
+@model CookingApp.Models.Recipe
+
+@{
+    ViewData["Title"] = "Edit Recipe";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Edit Recipe</h2>
+
+<form asp-action="EditRecipe" method="post" enctype="multipart/form-data">
+    <input type="hidden" asp-for="Id" />
+
+    <div class="custom-file">
+        <label asp-for="Image" class="custom-file-label" for="customFile">Cook Image</label>
+        <input asp-for="Image" type="file" class="custom-file-input" id="customFile">
+        <span class="d-block text-danger" asp-validation-for="Image"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Name"></label>
+        <input asp-for="Name" class="form-control" />
+        <span asp-validation-for="Name" class="text-danger"></span>
+    </div>
+
+    <div class="form-group" style="width: 650px;">
+        <label asp-for="CategoryId" for="exampleFormControlSelect2">Category</label>
+        <select asp-for="CategoryId" asp-items="ViewBag.Categories" class="form-control" id="exampleFormControlSelect2"
+            style="width: 519px;">
+        </select>
+        <span asp-validation-for="CategoryId" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="SelectedIngredientIds">Ingredients</label>
+        <select asp-for="SelectedIngredientIds" class="form-control" multiple>
+            @foreach (var ingredient in ViewBag.Ingredients)
+            {
+                <option value="@ingredient.Id">@ingredient.Name</option>
+            }
+        </select>
+
+        <span asp-validation-for="SelectedIngredientIds" class="text-danger"></span>
+    </div>
+    <div class="form-group">
+        <label asp-for="Instructions"></label>
+        <textarea asp-for="Instructions" class="form-control"></textarea>
+        <span asp-validation-for="Instructions" class="text-danger"></span>
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Save Changes</button>
+</form>

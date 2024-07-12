@@ -19,9 +19,9 @@ namespace CookingApp.Services
             return _categoryRepository.GetAllCategoriesAsync();
         }
 
-        public Task<Category> GetCategoryByIdAsync(int id)
+        public async Task<Category> GetCategoryByIdAsync(int id)
         {
-            return _categoryRepository.GetCategoryByIdAsync(id);
+            return await _categoryRepository.GetCategoryByIdAsync(id);
         }
 
         public Task<int> CreateCategoryAsync(Category category)
@@ -37,6 +37,11 @@ namespace CookingApp.Services
         public Task<bool> DeleteCategoryAsync(int id)
         {
             return _categoryRepository.DeleteCategoryAsync(id);
+        }
+
+        public async Task<Category> RecipesByCategory(int id)
+        {
+            return await _categoryRepository.RecipesByCategory(id);
         }
     }
 }

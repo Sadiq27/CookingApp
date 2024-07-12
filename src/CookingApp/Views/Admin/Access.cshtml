@@ -1,0 +1,43 @@
+@model User
+
+@{
+    ViewData["Title"] = "Admin Manage";
+
+}
+
+
+
+
+<form class="d-flex" asp-route="AdminManage" method="get">
+    <input class="form-control me-2" type="email" name="email" placeholder="Email" />
+    <button class="btn btn-outline-success" type="submit">Search</button>
+</form>
+
+@if (base.Model != null)
+{
+    <div class="card mb-3" style="max-width: 540px; margin-top: 30px">
+        <div class="row g-0">
+            <div class="col-md-8">
+                <div class="card-body">
+                    <div style="display: flex;">
+                        <h5 class="card-title" style="margin-right: 8px;">@base.Model.Username</h5>
+                    </div>
+                    @if (base.Model.Email != "admin@gmail.com")
+                    {
+                        <form asp-route="GiveAccess" method="post">
+                            <input type="hidden" name="email" value="@base.Model.Email" />
+                            <select name="role" class="form-select" aria-label="Role select">
+                                <option value="Admin">Admin</option>
+                            </select>
+                            <button type="submit" class="btn btn-primary mt-2">Give Access</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <h3 style="color: rgb(48, 48, 186);">Admin</h3>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+}

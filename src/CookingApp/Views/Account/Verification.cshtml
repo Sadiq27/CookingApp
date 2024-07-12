@@ -1,0 +1,59 @@
+@{
+    ViewData["Title"] = "Verification Page";
+}
+<link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+
+<style>
+    body {
+        background-color: #f0f2f5;
+        font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .verification-container {
+        max-width: 400px;
+        margin: 50px auto;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+        background-color: #ffffff;
+    }
+    .form-title {
+        margin-bottom: 20px;
+        font-weight: bold;
+        color: #333333;
+    }
+    .form-control {
+        text-align: center;
+        font-size: 1.2rem;
+        letter-spacing: 0.1rem;
+        border-radius: 5px;
+        border: 1px solid #ced4da;
+    }
+    .btn-primary {
+        width: 100%;
+        padding: 10px;
+        font-size: 1rem;
+        border-radius: 5px;
+        background-color: #007bff;
+        border-color: #007bff;
+    }
+    .btn-primary:hover {
+        background-color: #0056b3;
+        border-color: #004085;
+    }
+</style>
+
+<div class="container">
+    <div class="verification-container">
+        
+        <form asp-action="VerifyCode" method="post">
+            <div class="form-group">
+                <label for="VerificationCode">Verification Code</label>
+                <input type="number" class="form-control" id="VerificationCode" name="VerificationCode" required>
+            </div>
+            <button type="submit" class="btn btn-primary">Submit</button>
+        </form>
+    </div>
+</div>
+
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>

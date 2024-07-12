@@ -1,0 +1,37 @@
+@model Recipe
+
+@{
+    ViewData["Title"] = "Recipe Information";
+}
+
+<div class="recipe-card">
+    <div class="row">
+        <div class="col-md-4">
+            <img src="/Recipes/Image/@base.Model.Id" style="height: 300px; width: 300px" class="img-fluid">
+        </div>
+        <div class="col-md-8">
+            <div class="recipe-header">
+                <h3>@base.Model.Name</h3>
+            </div>
+            
+            <p><strong>Instructions:</strong> @base.Model.Instructions</p>
+            
+            @if (base.Model.Category != null)
+            {
+                <h4>Category:</h4>
+                <p>@base.Model.Category.Name</p>
+            }
+            
+            @if (base.Model.RecipeIngredients != null && base.Model.RecipeIngredients.Any())
+            {
+                <h4>Ingredients:</h4>
+                <ul>
+                    @foreach (var recipeIngredient in base.Model.RecipeIngredients)
+                    {
+                        <li>@recipeIngredient.Ingredient.Name</li>
+                    }
+                </ul>
+            }
+        </div>
+    </div>
+</div>

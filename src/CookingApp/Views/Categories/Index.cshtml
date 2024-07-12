@@ -6,26 +6,37 @@
 
 <h2>Categories</h2>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
+@if (User.IsInRole("Admin"))
+{
+    <p>
+        <a asp-action="Create">Create New</a>
+    </p>
+}
 
 <table class="table">
     <thead>
         <tr>
             <th>Name</th>
-            <th></th>
+            @if (User.IsInRole("Admin"))
+            {
+                <th>Actions</th>
+            }
         </tr>
     </thead>
     <tbody>
         @foreach (var category in Model)
         {
             <tr>
-                <td>@category.Name</td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@category.Id">Edit</a> |
-                    <a asp-action="Delete" asp-route-id="@category.Id">Delete</a>
+                    <a asp-action="RecipesByCategory" asp-route-id="@category.Id">@category.Name</a>
                 </td>
+                @if (User.IsInRole("Admin"))
+                {
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@category.Id">Edit</a> |
+                        <a asp-action="Delete" asp-route-id="@category.Id">Delete</a>
+                    </td>
+                }
             </tr>
         }
     </tbody>
